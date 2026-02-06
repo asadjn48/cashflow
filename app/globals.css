@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
+/* TAILWIND V4 CONFIGURATION 
+   This connects your CSS variables to Tailwind utility classes.
+   e.g., --color-background creates 'bg-background', 'text-background', etc.
+*/
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  
+  --color-success: hsl(var(--success));
+  --color-danger: hsl(var(--danger));
+  --color-warning: hsl(var(--warning));
+}
+
+/* THEME VARIABLES (Values)
+*/
 :root {
   /* PRIMARY COLOR: #0663F4 -> HSL(217, 95%, 49%) */
   --primary: 217 95% 49%;
@@ -32,16 +56,25 @@
   }
 }
 
+/* BASE STYLES 
+   Now 'bg-background' will work because we defined it in @theme above.
+*/
 @layer base {
   body {
     @apply bg-background text-foreground antialiased;
   }
+  
+  /* Reset borders */
+  *, ::after, ::before {
+    @apply border-border;
+  }
 }
 
-/* Custom Utilities for fast UI building */
+/* CUSTOM COMPONENTS 
+*/
 @layer components {
   .btn-primary {
-    @apply bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/20;
+    @apply bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/20;
   }
   
   .card-hover {
