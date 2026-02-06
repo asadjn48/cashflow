@@ -3,7 +3,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// 1. Construct the config object using your environment variables
+// 1. Construct the config object using our environment variables
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -14,8 +14,6 @@ const firebaseConfig = {
 };
 
 // 2. Initialize Firebase
-// We check `getApps().length` to prevent "App already initialized" errors
-// during Next.js hot-reloading.
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // 3. Export the services we need

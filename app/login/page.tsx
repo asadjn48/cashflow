@@ -22,13 +22,18 @@ export default function LoginPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      
       // Login successful!
-      // We set a cookie so the Server Components know we are logged in
-      document.cookie = "auth_token=true; path=/"; 
+      document.cookie = "auth_token=true; path=/; max-age=86400"; 
       router.push("/dashboard");
+      
     } catch (err: any) {
-      console.error(err);
-      setError("Invalid email or password.");
+      
+      if (err.code === 'auth/invalid-credential') {
+        setError("Invalid email or password.");
+      } else {
+        setError("Failed to login. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -38,7 +43,6 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-950 p-4">
       <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-200 dark:border-slate-800">
         
-        {/* Logo / Header */}
         <div className="flex flex-col items-center mb-8">
           <div className="p-3 bg-emerald-600 rounded-xl mb-4">
             <Lock className="w-8 h-8 text-white" />
@@ -47,7 +51,6 @@ export default function LoginPage() {
           <p className="text-slate-500 text-sm mt-1">Cashflow Management System</p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Email</label>

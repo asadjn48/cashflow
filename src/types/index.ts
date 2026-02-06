@@ -4,7 +4,7 @@ import { Timestamp } from 'firebase/firestore';
 
 // 1. Business Interface
 export interface Business {
-  id: string; // The Firestore document ID
+  id: string; 
   name: string;
   type: 'taxi' | 'laundry' | 'carwash' | 'property' | 'other';
   currency: string;
@@ -19,20 +19,20 @@ export interface Business {
 // 2. Transaction Interface
 export interface Transaction {
   id: string;
-  businessId: string; // Reference to parent business
+  businessId: string; 
   amount: number;
   type: 'income' | 'expense';
   date: Date | Timestamp;
   description: string;
-  category?: string; // Optional (e.g., 'Fuel', 'Rent')
+  category?: string; 
 }
 
 // 3. Savings Rule Interface
 export interface SavingsRule {
   id: string;
   name: string;
-  percent: number; // e.g., 30 for 30%
-  color: string;   // Hex code for charts (e.g., "#10b981")
+  percent: number; 
+  color: string;   
 }
 
 export interface SavingsConfig {
@@ -50,5 +50,4 @@ export interface Idea {
   createdAt: Date | Timestamp;
 }
 
-// Helper Type for creating a new business (excludes ID and stats)
 export type NewBusinessPayload = Omit<Business, 'id' | 'stats' | 'createdAt'>;

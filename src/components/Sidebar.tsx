@@ -1,43 +1,59 @@
 // src/components/Sidebar.tsx
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useAuth } from "@/src/components/AuthProvider"; 
+import { usePathname } from "next/navigation"; 
+// REMOVED: import { useRouter } from "next/navigation"; <--- We don't need this anymore
+import { useAuth } from "@/src/components/AuthProvider";
 import { signOut } from "firebase/auth";
 import { auth } from "@/src/lib/firebase";
 import { 
   LayoutDashboard, 
-  PiggyBank, 
+  BanknoteArrowUpIcon, 
   Lightbulb, 
   Settings, 
   Wallet,
-  LogOut // New Icon
+  LogOut,
+  Loader2 
 } from "lucide-react";
 import clsx from "clsx";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Savings", href: "/dashboard/savings", icon: PiggyBank },
+  { name: "Savings", href: "/dashboard/savings", icon: BanknoteArrowUpIcon },
   { name: "Ideas", href: "/dashboard/ideas", icon: Lightbulb },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { user } = useAuth(); // Get real user
+  const { user } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    // This signs out from Firebase. 
-    // The AuthProvider will detect the change and auto-redirect to /login
-    await signOut(auth);
+    setIsLoggingOut(true);
+    try {
+      // 1. Sign out from Firebase
+      await signOut(auth);
+
+      // 2. DESTROY the Cookie
+      document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+
+      // 3. FORCE HARD RELOAD (The Fix)
+      // This forces the browser to dump memory and request the login page from scratch.
+      window.location.href = "/login"; 
+      
+    } catch (error) {
+      console.error("Logout failed", error);
+      setIsLoggingOut(false);
+    }
   };
 
   return (
     <>
       {/* --- Desktop Sidebar (Left) --- */}
       <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-50">
-        {/* Logo Area */}
         <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
           <div className="p-2 bg-emerald-600 rounded-lg">
             <Wallet className="w-6 h-6 text-white" />
@@ -47,7 +63,6 @@ export default function Sidebar() {
           </span>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -71,7 +86,6 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* User / Footer */}
         <div className="p-4 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 px-4 py-2 mb-2">
             <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
@@ -87,10 +101,11 @@ export default function Sidebar() {
           
           <button 
             onClick={handleLogout}
+            disabled={isLoggingOut}
             className="w-full flex items-center gap-2 px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors font-medium"
           >
-            <LogOut className="w-4 h-4" />
-            Sign Out
+            {isLoggingOut ? <Loader2 className="animate-spin w-4 h-4" /> : <LogOut className="w-4 h-4" />}
+            {isLoggingOut ? "Exiting..." : "Sign Out"}
           </button>
         </div>
       </aside>
@@ -115,9 +130,8 @@ export default function Sidebar() {
               </Link>
             );
           })}
-          {/* Mobile Logout (Simple Icon) */}
-          <button onClick={handleLogout} className="flex flex-col items-center gap-1 p-2 rounded-lg text-rose-500">
-             <LogOut className="w-6 h-6" />
+          <button onClick={handleLogout} disabled={isLoggingOut} className="flex flex-col items-center gap-1 p-2 rounded-lg text-rose-500">
+             {isLoggingOut ? <Loader2 className="animate-spin w-6 h-6" /> : <LogOut className="w-6 h-6" />}
              <span className="text-[10px] font-medium">Exit</span>
           </button>
         </div>
