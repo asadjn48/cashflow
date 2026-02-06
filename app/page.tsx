@@ -1,32 +1,16 @@
-// // src/app/page.tsx
-// import { redirect } from "next/navigation";
-
-// export default function Home() {
-//   redirect("/dashboard");
-// }
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/src/components/AuthProvider"; // Make sure path matches your project
+import { useAuth } from "@/src/components/AuthProvider";
 import Link from "next/link";
-import { Wallet, ArrowRight, ShieldCheck, PieChart, Globe } from "lucide-react";
+import { Wallet, ArrowRight, LayoutDashboard } from "lucide-react";
 
 export default function LandingPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // 1. Auto-Redirect if already logged in
+  // Auto-Redirect if logged in
   useEffect(() => {
     if (!loading && user) {
       router.push("/dashboard");
@@ -34,88 +18,83 @@ export default function LandingPage() {
   }, [user, loading, router]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
+    // h-screen + overflow-hidden ensures NO SCROLL
+    <div className="h-screen bg-white dark:bg-slate-950 flex flex-col overflow-hidden relative selection:bg-blue-100 selection:text-blue-900">
       
-      {/* Navbar */}
-      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-[hsl(var(--primary))] rounded-lg">
-            <Wallet className="w-6 h-6 text-white" />
+      {/* Subtle Background Effects */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-125 h-125 bg-blue-500/5 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-125 h-125 bg-cyan-500/5 rounded-full blur-[100px]"></div>
+      </div>
+
+      {/* Navbar - Slim & Minimal */}
+      <nav className="p-6 flex justify-between items-center w-full max-w-7xl mx-auto z-10">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-[hsl(var(--primary))] rounded-xl shadow-lg shadow-blue-500/20">
+            <Wallet className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-            CashFlow
+          <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            CashFlow<span className="text-slate-400 font-normal">.Admin</span>
           </span>
         </div>
-        <div className="flex gap-4">
-            <Link 
-              href="/login" 
-              className="px-5 py-2.5 rounded-full font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
-            >
-              Log In
-            </Link>
-            <Link 
-              href="/login" // Or /signup if you have it
-              className="px-5 py-2.5 rounded-full font-medium bg-[hsl(var(--primary))] text-white hover:opacity-90 transition-all shadow-lg shadow-blue-500/30"
-            >
-              Get Started
-            </Link>
+        
+        {/* Simple Status Indicator */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-xs font-medium text-slate-500">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            System Operational
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 relative overflow-hidden">
+      {/* Main Content - Perfectly Centered */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 relative z-10">
         
-        {/* Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
-
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-semibold mb-8 border border-blue-100 dark:border-blue-800">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-            </span>
-            v2.0 is Live with Multi-Currency Support
+        <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-semibold border border-blue-100 dark:border-blue-800 shadow-sm">
+            <LayoutDashboard className="w-4 h-4" />
+            <span>v2.0 Professional Edition</span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-4xl">
-          Master your <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">Business Finances</span> with confidence.
+        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-3xl leading-tight">
+          Financial Control <br className="hidden md:block"/>
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">
+            Simplified.
+          </span>
         </h1>
 
-        <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mb-10 leading-relaxed">
-          Track income, manage expenses, and automate your savings rules. 
-          The professional dashboard for modern entrepreneurs.
+        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-lg mb-10 leading-relaxed">
+          Secure admin access for managing business portfolios, tracking real-time profits, and optimizing savings.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-          <Link 
-            href="/dashboard"
-            className="flex-1 flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform"
-          >
-            Go to Dashboard <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 max-w-6xl mx-auto w-full px-4">
-            {[
-                { icon: ShieldCheck, title: "Bank-Grade Security", desc: "Your financial data is encrypted and secure with Firebase Auth." },
-                { icon: PieChart, title: "Smart Analytics", desc: "Real-time profit/loss calculation with visual charts." },
-                { icon: Globe, title: "Multi-Currency", desc: "Support for USD, PKR, EUR, GBP with auto-conversion." }
-            ].map((f, i) => (
-                <div key={i} className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all text-left">
-                    <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-                        <f.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">{f.title}</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
-                </div>
-            ))}
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+          {user ? (
+             <Link 
+                href="/dashboard"
+                className="w-full flex items-center justify-center gap-2 bg-[hsl(var(--primary))] text-white px-8 py-3.5 rounded-xl font-bold hover:opacity-90 transition-all shadow-xl shadow-blue-500/20"
+              >
+                Enter Dashboard <ArrowRight className="w-4 h-4" />
+              </Link>
+          ) : (
+              <>
+                <Link 
+                    href="/login"
+                    className="w-full flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3.5 rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                    Log In
+                </Link>
+              </>
+          )}
         </div>
 
       </main>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-slate-400 text-sm border-t border-slate-100 dark:border-slate-800">
-        © {new Date().getFullYear()} CashFlow Dashboard. All rights reserved.
+      {/* Footer - Minimal & Pinned */}
+      <footer className="py-6 text-center z-10">
+        <p className="text-xs text-slate-400 font-medium">
+          © {new Date().getFullYear()} Private Admin Console. Secure Connection.
+        </p>
       </footer>
     </div>
   );
