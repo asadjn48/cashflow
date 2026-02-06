@@ -18,7 +18,6 @@ export default function LandingPage() {
   }, [user, loading, router]);
 
   return (
-    // h-screen + overflow-hidden ensures NO SCROLL
     <div className="h-screen bg-white dark:bg-slate-950 flex flex-col overflow-hidden relative selection:bg-blue-100 selection:text-blue-900">
       
       {/* Subtle Background Effects */}
@@ -53,7 +52,7 @@ export default function LandingPage() {
         
         <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-semibold border border-blue-100 dark:border-blue-800 shadow-sm">
             <LayoutDashboard className="w-4 h-4" />
-            <span>v2.0 Professional Edition</span>
+            {/* <span>v2.0 Professional Edition</span> */}
         </div>
 
         <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-3xl leading-tight">
