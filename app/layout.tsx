@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ToastProvider } from "@/src/components/ToastProvider";
-// import WhatsAppFloat from "@/src/components/WhatsAppFloat";
-import "./globals.css";
 import { AuthProvider } from "@/src/components/AuthProvider";
+import { ToastProvider } from "@/src/components/ToastProvider";
+import { ThemeProvider } from "@/src/components/ThemeProvider"; 
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,27 +15,47 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// 1. LOGO CONFIGURATION
 export const metadata: Metadata = {
   title: "Cashflow Dashboard",
   description: "Professional Business Finance Management",
   icons: {
-    icon: "/logo.jpg", 
-    shortcut: "/logo.jpg",
-    apple: "/logo.jpg", 
+    icon: "/logo.png", 
+    shortcut: "/logo.png",
+    apple: "/logo.png", 
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // 1. ADD suppressHydrationWarning
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* 2. AUTH PROVIDER */}
+        
+        {/* 2. NO-FLASH SCRIPT: Runs instantly to set dark mode before React loads */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem('theme');
+                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+
         <AuthProvider>
-          {/* 3. TOAST PROVIDER (Notifications) */}
-          <ToastProvider>
-            {children}
-          </ToastProvider>
+          <ThemeProvider>
+             <ToastProvider>
+               {children}
+             </ToastProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
