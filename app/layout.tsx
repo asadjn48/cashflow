@@ -18,18 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Cashflow Dashboard",
   description: "Professional Business Finance Management",
-  manifest: "/manifest.json",
+
   icons: {
     icon: "/logo.png", 
     shortcut: "/logo.png",
     apple: "/logo.png", 
-  },
-  // Viewport for PWA
-   viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false, // Prevents zooming, feels like native app
   },
 };
 
