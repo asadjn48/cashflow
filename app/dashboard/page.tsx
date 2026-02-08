@@ -35,13 +35,29 @@ export default function Dashboard() {
         await updateDoc(doc(db, "users", user.uid, "businesses", editingBiz.id), { name: newName });
         showToast("Business renamed", "success");
         setEditingBiz(null);
+<<<<<<< HEAD
+<<<<<<< HEAD
+        refresh(); 
+=======
         refresh(); // <--- Tells SWR to re-fetch in background
+>>>>>>> 8a182d0a3fb65f2c6ade179c92b807ce4ecf0774
+=======
+        refresh(); // <--- Tells SWR to re-fetch in background
+>>>>>>> 8a182d0a3fb65f2c6ade179c92b807ce4ecf0774
     } catch(e) {
         showToast("Failed to rename", "error");
     }
   };
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+=======
   // Calculate Global Stats (This is instant now)
+>>>>>>> 8a182d0a3fb65f2c6ade179c92b807ce4ecf0774
+=======
+  // Calculate Global Stats (This is instant now)
+>>>>>>> 8a182d0a3fb65f2c6ade179c92b807ce4ecf0774
   const totalNetProfit = businesses.reduce((sum, b) => sum + b.stats.netProfit, 0);
   const totalExpenses = businesses.reduce((sum, b) => sum + b.stats.totalExpense, 0);
 

@@ -1,10 +1,8 @@
-// src/components/Sidebar.tsx
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; 
-// REMOVED: import { useRouter } from "next/navigation"; <--- We don't need this anymore
 import { useAuth } from "@/src/components/AuthProvider";
 import { signOut } from "firebase/auth";
 import { auth } from "@/src/lib/firebase";
@@ -34,16 +32,10 @@ export default function Sidebar() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      // 1. Sign out from Firebase
       await signOut(auth);
-
-      // 2. DESTROY the Cookie
+      // Force clear cookie and reload to ensure clean state
       document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-
-      // 3. FORCE HARD RELOAD (The Fix)
-      // This forces the browser to dump memory and request the login page from scratch.
       window.location.href = "/login"; 
-      
     } catch (error) {
       console.error("Logout failed", error);
       setIsLoggingOut(false);
@@ -110,7 +102,7 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* --- Mobile Bottom Nav --- */}
+      {/* --- Mobile Bottom Nav (Fixed) --- */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 pb-safe">
         <div className="flex justify-around items-center p-3">
           {navItems.map((item) => {
@@ -121,11 +113,11 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={clsx(
-                  "flex flex-col items-center gap-1 p-2 rounded-lg",
-                  isActive ? "text-emerald-600" : "text-slate-400"
+                  "flex flex-col items-center gap-1 p-2 rounded-lg transition-colors",
+                  isActive ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"
                 )}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className={clsx("w-6 h-6", isActive && "fill-current")} />
                 <span className="text-[10px] font-medium">{item.name}</span>
               </Link>
             );
