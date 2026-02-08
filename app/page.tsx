@@ -33,11 +33,7 @@ export default function LandingPage() {
             <Wallet className="w-5 h-5 text-white" />
           </div>
           <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-<<<<<<< HEAD
             CashFlow <span className="text-slate-400 font-normal"> Tracker</span>
-=======
-            CashFlow<span className="text-slate-400 font-normal">.Admin</span>
->>>>>>> 8a182d0a3fb65f2c6ade179c92b807ce4ecf0774
           </span>
         </div>
         
