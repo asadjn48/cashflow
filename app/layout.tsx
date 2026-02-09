@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cashflow Dashboard",
+  title: "Cashflow Tracker",
   description: "Professional Business Finance Management",
 
   icons: {

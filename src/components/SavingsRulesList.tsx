@@ -18,13 +18,17 @@ export default function SavingsRulesList({ rules, totalProfit, onUpdate, onRemov
         return (
           <div key={rule.id} className="group relative bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
             <div className="flex items-start gap-4">
+              
+              {/* Color Picker Input */}
               <input 
                 type="color" 
                 value={rule.color}
                 onChange={(e) => onUpdate(rule.id, "color", e.target.value)}
-                className="w-10 h-10 rounded-lg cursor-pointer border-none bg-transparent"
+                className="w-10 h-10 rounded-lg cursor-pointer border-none bg-transparent p-0 shrink-0"
+                title="Change Color"
               />
-              <div className="flex-1 space-y-3">
+              
+              <div className="flex-1 space-y-3 min-w-0">
                 <div>
                   <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Category Name</label>
                   <input 
@@ -34,36 +38,47 @@ export default function SavingsRulesList({ rules, totalProfit, onUpdate, onRemov
                     className="w-full text-lg font-bold bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[hsl(var(--primary))] focus:outline-none text-slate-900 dark:text-white transition-colors"
                   />
                 </div>
+                
                 <div className="flex items-center gap-4">
-                  <div className="w-24">
+                  <div className="w-24 shrink-0">
                     <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Percent</label>
                     <div className="relative">
+                      {/* FIX APPLIED HERE: Added standard css to hide spinners and padding-right */}
                       <input 
                         type="number" 
                         value={rule.percent}
                         onChange={(e) => onUpdate(rule.id, "percent", Number(e.target.value))}
-                        className="w-full font-mono font-bold p-2 bg-slate-50 dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-[hsl(var(--primary))] outline-none dark:text-white"
+                        className="w-full font-mono font-bold p-2 pr-8 bg-slate-50 dark:bg-slate-800 rounded-lg focus:ring-2 focus:ring-[hsl(var(--primary))] outline-none dark:text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
-                      <span className="absolute right-3 top-2.5 text-slate-400 text-sm">%</span>
+                      <span className="absolute right-3 top-2.5 text-slate-400 text-sm pointer-events-none">%</span>
                     </div>
                   </div>
-                  <div className="flex-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                  
+                  <div className="flex-1 opacity-50 group-hover:opacity-100 transition-opacity min-w-0">
                     <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Value</label>
-                    <div className="flex items-center gap-1 text-lg font-medium text-emerald-600 dark:text-emerald-400">
+                    <div className="flex items-center gap-1 text-lg font-medium text-emerald-600 dark:text-emerald-400 truncate">
                       <DollarSign className="w-4 h-4" />
                       {calculatedAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </div>
                   </div>
                 </div>
               </div>
-              <button onClick={() => onRemove(rule.id)} className="opacity-100 md:opacity-0 group-hover:opacity-100 p-2 text-slate-300 hover:text-rose-500 transition-all">
+              
+              <button 
+                onClick={() => onRemove(rule.id)} 
+                className="opacity-100 md:opacity-0 group-hover:opacity-100 p-2 text-slate-300 hover:text-rose-500 transition-all shrink-0"
+              >
                 <Trash2 className="w-5 h-5" />
               </button>
             </div>
           </div>
         );
       })}
-      <button onClick={onAdd} className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 hover:text-[hsl(var(--primary))] hover:border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/5 transition-all h-full min-h-40">
+      
+      <button 
+        onClick={onAdd} 
+        className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 hover:text-[hsl(var(--primary))] hover:border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/5 transition-all h-full min-h-40"
+      >
         <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full group-hover:scale-110 transition-transform">
           <Plus className="w-6 h-6" />
         </div>

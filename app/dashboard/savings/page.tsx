@@ -70,7 +70,7 @@ export default function SavingsPage() {
   if (isFirstLoad) return <div className="flex justify-center p-12"><Loader2 className="animate-spin w-8 h-8 text-[hsl(var(--primary))]" /></div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-6xl mx-auto p-2 md:p-8 space-y-8 animate-in fade-in duration-500">
       <DashboardHeader title="Savings & Rules" />
 
       {/* Hero Stats */}
