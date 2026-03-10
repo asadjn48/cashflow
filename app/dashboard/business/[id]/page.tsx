@@ -24,10 +24,10 @@ export default function BusinessPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
 
-  // FIX: Ensure businessId is always a string, never undefined
+
   const businessId = Array.isArray(id) ? id[0] : (id || "");
   
-  // 1. FAST DATA FETCHING (Now safe because businessId is definitely a string)
+ 
   const { business, transactions, isLoading, refresh } = useBusinessData(user?.uid, businessId);
 
   // 2. STATE
@@ -87,7 +87,7 @@ export default function BusinessPage() {
   const confirmDelete = async () => {
     if (!user || !business || !deletingTxId) return;
     setIsDeleting(true);
-    // TypeScript safe finding
+    // safe finding
     const txToDelete = transactions.find((t: any) => t.id === deletingTxId);
     
     try {
@@ -127,7 +127,7 @@ export default function BusinessPage() {
   if (!business) return <div className="text-center p-12">Business not found</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
+    <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
       
       <BusinessHeader 
         businessName={business.name} 

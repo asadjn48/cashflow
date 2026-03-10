@@ -21,7 +21,7 @@ const ideasFetcher = async (userId: string) => {
     return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-        // Convert Timestamp to Date for client use
+
         createdAt: doc.data().createdAt?.toDate()?.toISOString() || new Date().toISOString()
     }));
 };
@@ -30,7 +30,7 @@ export default function IdeasPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
   
-  // 1. USE SWR FOR INSTANT LOAD
+  // 1. Fetch Ideas
   const { data: ideas = [], error, isLoading, mutate } = useSWR(
     user ? [user.uid, "ideas"] : null,
     ([uid]) => ideasFetcher(uid),
@@ -73,7 +73,7 @@ export default function IdeasPage() {
         await addDoc(collection(db, "users", user.uid, "ideas"), { title, content, createdAt: serverTimestamp() });
         showToast("New idea added", "success");
       }
-      mutate(); // Refresh SWR
+      mutate(); 
       setIsModalOpen(false);
     } catch (e) { showToast("Failed to save", "error"); } 
     finally { setIsSaving(false); }
@@ -84,7 +84,7 @@ export default function IdeasPage() {
     try {
       await deleteDoc(doc(db, "users", user.uid, "ideas", deletingId));
       showToast("Idea discarded", "success");
-      mutate(); // Refresh SWR
+      mutate(); 
     } catch (e) { showToast("Failed to delete", "error"); } 
     finally { setDeletingId(null); }
   };

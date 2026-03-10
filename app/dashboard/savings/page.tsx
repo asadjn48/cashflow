@@ -18,11 +18,11 @@ export default function SavingsPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
   
-  // 1. LOAD DATA INSTANTLY (From Cache)
+  // 1. Data Loading (From Cache)
   const { businesses, currencySymbol, isLoading: isBizLoading } = useBusinesses();
   const { rules: cachedRules, isLoading: isRulesLoading, saveRules } = useSavingsRules();
   
-  // Local state for editing (Synced with Cache)
+  // Synced with Cache
   const [localRules, setLocalRules] = useState<SavingsRule[]>([]);
   const [originalRules, setOriginalRules] = useState<string>("");
   const [saving, setSaving] = useState(false);
