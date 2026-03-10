@@ -20,22 +20,22 @@ export default function Dashboard() {
   const { user } = useAuth(); 
   const { showToast } = useToast();
   
-  // 1. USE THE HOOK
+
   const { businesses, currencySymbol, isLoading, refresh } = useBusinesses();
 
-  // Menus & Modals State
+
   const [activeMenu, setActiveMenu] = useState<string | null>(null); 
   
-  // Edit State
+
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
   const [newName, setNewName] = useState("");
   const [isRenaming, setIsRenaming] = useState(false);
 
-  // Delete State
+
   const [deletingBiz, setDeletingBiz] = useState<Business | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // --- INSTANT RENAME ---
+
   const handleRename = async () => {
     if(!user || !editingBiz || !newName.trim()) return;
     setIsRenaming(true);
@@ -52,7 +52,7 @@ export default function Dashboard() {
     }
   };
 
-  // --- INSTANT DELETE ---
+  
   const handleDelete = async () => {
     if(!user || !deletingBiz) return;
     setIsDeleting(true);
@@ -84,7 +84,7 @@ export default function Dashboard() {
          <AddBusinessModal onSuccess={() => refresh()} /> 
       </div>
 
-      {/* Global Stats Grid */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="relative overflow-hidden bg-[hsl(var(--primary))] text-white p-8 rounded-3xl shadow-xl shadow-blue-500/20 card-hover">
           <div className="absolute top-0 right-0 p-4 opacity-10"><Wallet className="w-32 h-32" /></div>
