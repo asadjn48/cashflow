@@ -47,7 +47,7 @@ export default function IdeasPage() {
   const filteredIdeas = useMemo(() => {
     return ideas.filter((idea: any) => 
       idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      idea.content.toLowerCase().includes(searchQuery.toLowerCase())
+      idea.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [ideas, searchQuery]);
 
@@ -63,14 +63,14 @@ export default function IdeasPage() {
     setIsSaving(true);
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
-    const content = formData.get("content") as string;
+    const description = formData.get("description") as string;
 
     try {
       if (editingIdea) {
-        await updateDoc(doc(db, "users", user.uid, "ideas", editingIdea.id), { title, content });
+        await updateDoc(doc(db, "users", user.uid, "ideas", editingIdea.id), { title, description });
         showToast("Note updated", "success");
       } else {
-        await addDoc(collection(db, "users", user.uid, "ideas"), { title, content, createdAt: serverTimestamp() });
+        await addDoc(collection(db, "users", user.uid, "ideas"), { title, description, createdAt: serverTimestamp() });
         showToast("New idea added", "success");
       }
       mutate(); 

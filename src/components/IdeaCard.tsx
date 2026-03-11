@@ -29,7 +29,7 @@ export default function IdeaCard({ idea, onEdit, onDelete }: Props) {
 
         <div className="flex-1 overflow-hidden relative">
             <p className="text-slate-600 dark:text-slate-300 text-sm whitespace-pre-wrap leading-relaxed line-clamp-6">
-                {idea.content}
+                {idea.description}
             </p>
             <div className="absolute bottom-0 left-0 right-0 h-8 bg-linear-to-t from-white dark:from-slate-900 to-transparent"></div>
         </div>

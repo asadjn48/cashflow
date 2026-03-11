@@ -7,11 +7,11 @@ import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from "firebase
 import { revalidatePath } from "next/cache";
 
 // Add a new Idea
-export async function addIdea(userId: string, title: string, content: string) {
+export async function addIdea(userId: string, title: string, description: string) {
   try {
     await addDoc(collection(db, "users", userId, "ideas"), {
       title,
-      content,
+      description,
       createdAt: Timestamp.now(),
     });
     revalidatePath("/dashboard/ideas");
@@ -28,7 +28,6 @@ export async function getIdeas(userId: string) {
     return snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-      // Convert Date for Client
       createdAt: doc.data().createdAt?.toDate().toISOString() 
     }));
   } catch (error) {

@@ -31,7 +31,7 @@ export default function IdeaModal({ isOpen, onClose, onSave, idea, isSaving }: P
                 </div>
                 <div>
                     <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Details</label>
-                    <textarea name="content" defaultValue={idea?.content} required placeholder="Describe your plan..." className="w-full h-40 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none resize-none dark:text-slate-200" />
+                    <textarea name="description" defaultValue={idea?.description} required placeholder="Describe your plan..." className="w-full h-40 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none resize-none dark:text-slate-200" />
                 </div>
                 <div className="flex gap-3 pt-2">
                     <Button type="button" variant="secondary" className="flex-1" onClick={onClose}>Cancel</Button>
