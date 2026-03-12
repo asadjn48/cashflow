@@ -17,7 +17,7 @@ export default function IdeaCard({ idea, onEdit, onDelete }: Props) {
             <h3 className="font-bold text-lg text-slate-800 dark:text-white line-clamp-1 group-hover:text-[hsl(var(--primary))] transition-colors">
                 {idea.title}
             </h3>
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex gap-1">
                 <button onClick={() => onEdit(idea)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-[hsl(var(--primary))]">
                     <Pencil className="w-4 h-4" />
                 </button>
