@@ -77,7 +77,7 @@ export default function TransactionFilters({
             />
           )}
 
-          {/* Year Picker (Fixed Colors) */}
+          {/* Year Picker */}
           {timeRange === "yearly" && (
             <select
               value={selectedYear}

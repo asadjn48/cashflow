@@ -33,7 +33,6 @@ export default function Sidebar() {
     setIsLoggingOut(true);
     try {
       await signOut(auth);
-      // Force clear cookie and reload to ensure clean state
       document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       window.location.href = "/login"; 
     } catch (error) {
@@ -102,7 +101,7 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* --- Mobile Bottom Nav (Fixed) --- */}
+      {/* --- Mobile Bottom Nav --- */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 pb-safe">
         <div className="flex justify-around items-center p-3">
           {navItems.map((item) => {

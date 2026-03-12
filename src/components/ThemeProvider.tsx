@@ -63,14 +63,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     syncTheme();
   }, [user]);
 
-  // 2. Toggle Function (Saves to DB too)
+  // 2. Toggle Function
   const toggleTheme = async () => {
     const newTheme = theme === "light" ? "dark" : "light";
     
-    // Apply immediately for UI responsiveness
     applyTheme(newTheme);
 
-    // Save to Database if logged in
+    // 
     if (user) {
       try {
         await setDoc(doc(db, "users", user.uid, "settings", "general"), {

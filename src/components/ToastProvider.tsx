@@ -24,8 +24,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showToast = (message: string, type: ToastType = "info") => {
     const id = Date.now().toString();
     setToasts((prev) => [...prev, { id, message, type }]);
-
-    // Auto remove after 3 seconds
+    
     setTimeout(() => {
       removeToast(id);
     }, 3000);
@@ -38,7 +37,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {/* Toast Container - Centered */}
+      {/* Toast Container */}
       <div className="fixed top-10 left-1/2 transform -translate-x-1/2 z-9999 flex flex-col gap-2 w-full max-w-sm px-4 pointer-events-none">
         {toasts.map((toast) => (
           <div 

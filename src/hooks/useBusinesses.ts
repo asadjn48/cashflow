@@ -6,23 +6,23 @@ import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { useAuth } from "@/src/components/AuthProvider";
 import { Business } from "@/src/types";
 
-// 1. The Fetcher Function (The logic that actually touches Firebase)
+// 1. The Fetcher Function
 const fetcher = async ([userId]: [string]) => {
   if (!userId) return { businesses: [], currencySymbol: "$" };
 
-  // Fetch Business Data & Settings in Parallel
+  // Fetch Business Data & Settings 
   const [businessesSnap, settingsSnap] = await Promise.all([
     getDocs(collection(db, "users", userId, "businesses")),
     getDoc(doc(db, "users", userId, "settings", "general"))
   ]);
 
-  // Process Businesses
+  // 
   const businesses = businessesSnap.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   })) as Business[];
 
-  // Process Currency
+
   let currencySymbol = "$";
   if (settingsSnap.exists() && settingsSnap.data().currency) {
     const code = settingsSnap.data().currency;
@@ -35,16 +35,16 @@ const fetcher = async ([userId]: [string]) => {
   return { businesses, currencySymbol };
 };
 
-// 2. The Hook (The part you use in your components)
+// 2. The Hook 
 export function useBusinesses() {
   const { user } = useAuth();
 
   const { data, error, isLoading, mutate } = useSWR(
-    user ? [user.uid, "businesses"] : null, // Unique Cache Key
+    user ? [user.uid, "businesses"] : null, 
     fetcher,
     {
-      revalidateOnFocus: false, // Don't refetch just because I clicked the window
-      dedupingInterval: 60000, // Cache data for 60 seconds (Super Fast!)
+      revalidateOnFocus: false, 
+      dedupingInterval: 60000, 
     }
   );
 
@@ -53,6 +53,6 @@ export function useBusinesses() {
     currencySymbol: data?.currencySymbol || "$",
     isLoading,
     isError: error,
-    refresh: mutate, // Call this to force a reload (e.g., after adding a business)
+    refresh: mutate, 
   };
 }

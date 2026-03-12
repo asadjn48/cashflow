@@ -5,9 +5,8 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function ProfitChart({ data }: { data: any[] }) {
-  // FIX: The data now comes in as a string, so we use new Date(t.date) directly
   const chartData = data.map(t => ({
-    date: new Date(t.date).toLocaleDateString(), // Simple string parsing
+    date: new Date(t.date).toLocaleDateString(),
     amount: t.type === 'income' ? t.amount : -t.amount
   })).reverse(); 
 

@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import useSWR from "swr"; // FAST LOADING
+import useSWR from "swr"; 
 import { useAuth } from "@/src/components/AuthProvider";
 import { db } from "@/src/lib/firebase"; 
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc, serverTimestamp, query, orderBy } from "firebase/firestore"; 

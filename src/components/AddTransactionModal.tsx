@@ -1,4 +1,4 @@
-// src/components/AddTransactionModal.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -27,7 +27,7 @@ export default function AddTransactionModal({
     const description = formData.get("description") as string;
 
     try {
-      // START TRANSACTION (ACID Compliant)
+      // START TRANSACTION 
       await runTransaction(db, async (transaction) => {
         const businessRef = doc(db, "users", userId, "businesses", businessId);
         const newTransRef = doc(collection(db, "users", userId, "businesses", businessId, "transactions"));

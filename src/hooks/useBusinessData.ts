@@ -6,14 +6,13 @@ import { doc, getDoc, collection, getDocs, query, orderBy, limit } from "firebas
 import { db } from "@/src/lib/firebase";
 import { Business } from "@/src/types";
 
-// 1. Define the Shape of a Transaction (So TS stops complaining)
 export interface Transaction {
   id: string;
   description: string;
   amount: number;
   type: "income" | "expense";
   date: string;
-  [key: string]: any; // Allow other fields
+  [key: string]: any; 
 }
 
 const fetcher = async ([uid, businessId]: [string, string]) => {
@@ -31,12 +30,11 @@ const fetcher = async ([uid, businessId]: [string, string]) => {
   const transSnap = await getDocs(q);
 
   const transactions = transSnap.docs.map(d => {
-    // FIX: Cast data as 'any' so we can access description/amount without TS errors
     const data = d.data() as any; 
     
     return {
       id: d.id,
-      description: data.description || "No description", // Default values preventing crash
+      description: data.description || "No description", 
       amount: Number(data.amount) || 0,
       type: data.type || "expense",
       date: data.date ? data.date.toDate().toISOString() : new Date().toISOString()
@@ -46,7 +44,6 @@ const fetcher = async ([uid, businessId]: [string, string]) => {
   return { business, transactions };
 };
 
-// FIX: Allow 'userId' to be undefined (it handles the logged-out state)
 export function useBusinessData(userId: string | undefined, businessId: string) {
   const { data, error, isLoading, mutate } = useSWR(
     userId && businessId ? [userId, businessId] : null,

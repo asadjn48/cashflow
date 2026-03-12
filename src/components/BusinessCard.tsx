@@ -35,7 +35,6 @@ export default function BusinessCard({ business, currencySymbol, onRename }: Bus
             <h3 className="font-bold text-xl text-slate-900 dark:text-white truncate group-hover:text-[hsl(var(--primary))] transition-colors">
                 {business.name}
             </h3>
-            {/* Removed Type as requested */}
         </Link>
 
         {/* 3-Dot Menu */}
@@ -71,7 +70,7 @@ export default function BusinessCard({ business, currencySymbol, onRename }: Bus
       {/* Main Stats Link */}
       <Link href={`/dashboard/business/${business.id}`} className="block space-y-4">
         
-        {/* Net Profit (Big) */}
+        {/* Net Profit */}
         <div className="p-4 bg-[hsl(var(--primary))]/5 rounded-xl border border-[hsl(var(--primary))]/10">
             <div className="flex items-center gap-2 mb-1">
                 <Wallet className="w-4 h-4 text-[hsl(var(--primary))]" />
