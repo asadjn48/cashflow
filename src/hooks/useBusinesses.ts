@@ -1,58 +1,45 @@
+
+
+
+
+
+
+
 "use client";
 
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 import { db } from "@/src/lib/firebase";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "@/src/components/AuthProvider";
 import { Business } from "@/src/types";
 
-// 1. The Fetcher Function
-const fetcher = async ([userId]: [string]) => {
-  if (!userId) return { businesses: [], currencySymbol: "$" };
-
-  // Fetch Business Data & Settings 
-  const [businessesSnap, settingsSnap] = await Promise.all([
-    getDocs(collection(db, "users", userId, "businesses")),
-    getDoc(doc(db, "users", userId, "settings", "general"))
-  ]);
-
-  // 
-  const businesses = businessesSnap.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Business[];
-
-
-  let currencySymbol = "$";
-  if (settingsSnap.exists() && settingsSnap.data().currency) {
-    const code = settingsSnap.data().currency;
-    const symbols: Record<string, string> = { 
-        USD: "$", AUD: "A$ ", PHP: "₱", PKR: "Rs ", EUR: "€", GBP: "£" 
-    };
-    currencySymbol = symbols[code] || code;
-  }
-
-  return { businesses, currencySymbol };
-};
-
-// 2. The Hook 
 export function useBusinesses() {
   const { user } = useAuth();
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [currencySymbol, setCurrencySymbol] = useState("$");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data, error, isLoading, mutate } = useSWR(
-    user ? [user.uid, "businesses"] : null, 
-    fetcher,
-    {
-      revalidateOnFocus: false, 
-      dedupingInterval: 60000, 
-    }
-  );
+  useEffect(() => {
+    if (!user) return;
 
-  return {
-    businesses: data?.businesses || [],
-    currencySymbol: data?.currencySymbol || "$",
-    isLoading,
-    isError: error,
-    refresh: mutate, 
-  };
+    const unsubBiz = onSnapshot(collection(db, "users", user.uid, "businesses"), (snap) => {
+      const bizData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Business[];
+      setBusinesses(bizData);
+      setIsLoading(false);
+    });
+
+    const unsubSettings = onSnapshot(doc(db, "users", user.uid, "settings", "general"), (snap) => {
+      if (snap.exists() && snap.data().currency) {
+        const code = snap.data().currency;
+        const symbols: Record<string, string> = { USD: "$", AUD: "A$", PHP: "₱", PKR: "Rs ", EUR: "€", GBP: "£" };
+        setCurrencySymbol(symbols[code] || code);
+      }
+    });
+
+    return () => { unsubBiz(); unsubSettings(); };
+  }, [user]);
+
+  const refresh = () => {}; 
+
+  return { businesses, currencySymbol, isLoading, isError: false, refresh };
 }

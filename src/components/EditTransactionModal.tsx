@@ -43,7 +43,6 @@ export default function EditTransactionModal({
         const currentStats = businessDoc.data().stats;
         let newStats = { ...currentStats };
 
-        // 1. Reverse OLD Math
         if (transaction.type === 'income') {
             newStats.totalIncome -= transaction.amount;
             newStats.netProfit -= transaction.amount;
@@ -52,7 +51,6 @@ export default function EditTransactionModal({
             newStats.netProfit += transaction.amount;
         }
 
-        // 2. Apply NEW Math
         if (type === 'income') {
             newStats.totalIncome += amount;
             newStats.netProfit += amount;
@@ -61,7 +59,6 @@ export default function EditTransactionModal({
             newStats.netProfit -= amount;
         }
 
-        // 3. Commit
         txn.update(businessRef, { stats: newStats });
         txn.update(transRef, { amount, type, description });
       });

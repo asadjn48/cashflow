@@ -52,7 +52,6 @@ export default function TransactionFilters({
           ))}
         </div>
 
-        {/* 2. Date Selectors & Search */}
         <div className="flex flex-wrap items-center gap-3 flex-1 justify-end">
           
           {/* Search Input */}
@@ -67,7 +66,6 @@ export default function TransactionFilters({
             />
           </div>
 
-          {/* Month Picker */}
           {timeRange === "monthly" && (
             <input
               type="month"
@@ -77,7 +75,6 @@ export default function TransactionFilters({
             />
           )}
 
-          {/* Year Picker */}
           {timeRange === "yearly" && (
             <select
               value={selectedYear}

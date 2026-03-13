@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import { useState } from "react";
@@ -16,7 +19,6 @@ export default function AddBusinessModal({ onSuccess }: { onSuccess?: () => void
 
     setLoading(true);
     const name = formData.get("name") as string;
-    
     const currency = formData.get("currency") as string;
 
     try {
@@ -72,13 +74,13 @@ export default function AddBusinessModal({ onSuccess }: { onSuccess?: () => void
                 required 
                 placeholder="e.g. City Taxi 1" 
                 className="w-full p-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
+                autoFocus
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Currency</label>
-            <select name="currency" className="w-full p-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-              <option value="USD">USD ($)</option>
+            <select name="currency" defaultValue="AUD" className="w-full p-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
               <option value="AUD">Australian Dollar (A$)</option>
               <option value="PHP">Philippine Peso (₱)</option>
             </select>

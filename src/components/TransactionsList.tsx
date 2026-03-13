@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Calendar, Pencil, Trash2 } from "lucide-react";
@@ -5,7 +6,7 @@ import { Calendar, Pencil, Trash2 } from "lucide-react";
 interface Props {
   transactions: any[];
   onEdit: (tx: any) => void;
-  onDelete: (id: string) => void;
+  onDelete: (tx: any) => void; 
 }
 
 export default function TransactionsList({ transactions, onEdit, onDelete }: Props) {
@@ -41,7 +42,7 @@ export default function TransactionsList({ transactions, onEdit, onDelete }: Pro
                   <button onClick={() => onEdit(t)} className="p-2 text-slate-400 hover:text-[hsl(var(--primary))] bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => onDelete(t.id)} className="p-2 text-slate-400 hover:text-rose-600 bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all">
+                  <button onClick={() => onDelete(t)} className="p-2 text-slate-400 hover:text-rose-600 bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all">
                     <Trash2 className="w-4 h-4" />
                   </button>
               </div>

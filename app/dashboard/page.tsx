@@ -1,50 +1,44 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"; 
 
 import { useBusinesses } from "@/src/hooks/useBusinesses"; 
 import { useAuth } from "@/src/components/AuthProvider"; 
-import BusinessCard from "@/src/components/BusinessCard";
 import AddBusinessModal from "@/src/components/AddBusinessModal";
 import DashboardHeader from "@/src/components/DashboardHeader"; 
 import Button from "@/src/components/ui/Button"; 
 import Link from "next/link";
 import { Wallet, TrendingDown, ArrowUpRight, ArrowDownRight, RefreshCcw, MoreVertical, Pencil, X, Trash2, AlertTriangle } from "lucide-react";
 import { useState } from "react";
-import { updateDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/src/lib/firebase";
 import { useToast } from "@/src/components/ToastProvider";
 import { Business } from "@/src/types";
+import { db } from "@/src/lib/firebase";
+import { updateDoc, doc, writeBatch, collection, getDocs, getDoc } from "firebase/firestore";
 
 export default function Dashboard() {
   const { user } = useAuth(); 
   const { showToast } = useToast();
   
-
+  // Notice we no longer need removeBusinessOptimistically because of Real-Time!
   const { businesses, currencySymbol, isLoading, refresh } = useBusinesses();
 
-
   const [activeMenu, setActiveMenu] = useState<string | null>(null); 
-  
-
   const [editingBiz, setEditingBiz] = useState<Business | null>(null);
   const [newName, setNewName] = useState("");
   const [isRenaming, setIsRenaming] = useState(false);
-
-
   const [deletingBiz, setDeletingBiz] = useState<Business | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
 
   const handleRename = async () => {
     if(!user || !editingBiz || !newName.trim()) return;
     setIsRenaming(true);
+    const bizId = editingBiz.id;
+
     try {
-        await updateDoc(doc(db, "users", user.uid, "businesses", editingBiz.id), { name: newName });
-        refresh(); 
-        
-        showToast("Business renamed", "success");
-        setEditingBiz(null);
+        await updateDoc(doc(db, "users", user.uid, "businesses", bizId), { name: newName });
+        showToast("Portfolio renamed", "success");
+        setEditingBiz(null); 
     } catch(e) {
         showToast("Failed to rename", "error");
     } finally {
@@ -52,18 +46,66 @@ export default function Dashboard() {
     }
   };
 
-  
   const handleDelete = async () => {
     if(!user || !deletingBiz) return;
     setIsDeleting(true);
+    
+    const bizId = deletingBiz.id;
+    const netProfitToRemove = deletingBiz.stats.netProfit;
+
     try {
-        await deleteDoc(doc(db, "users", user.uid, "businesses", deletingBiz.id));
-        refresh();
-        
-        showToast("Business deleted", "success");
-        setDeletingBiz(null);
+        const batch = writeBatch(db);
+        const bizRef = doc(db, "users", user.uid, "businesses", bizId);
+
+        // 1. Queue all transactions for deletion
+        const transRef = collection(db, "users", user.uid, "businesses", bizId, "transactions");
+        const transSnap = await getDocs(transRef);
+        transSnap.forEach((d) => batch.delete(d.ref));
+
+        // 2. Queue business for deletion
+        batch.delete(bizRef);
+
+        // 3. PERFECT DEFICIT ACCOUNTING (Real-Time)
+        const rulesRef = doc(db, "users", user.uid, "savings_rules", "current");
+        const rulesSnap = await getDoc(rulesRef);
+
+        if (rulesSnap.exists()) {
+            const savingsData = rulesSnap.data();
+            const totalDistributed = savingsData.totalDistributed || 0;
+
+            // Calculate global profit WITHOUT this business
+            const allBizSnap = await getDocs(collection(db, "users", user.uid, "businesses"));
+            let globalNetProfit = 0;
+            allBizSnap.forEach(doc => {
+                if (doc.id !== bizId) {
+                    globalNetProfit += doc.data().stats?.netProfit || 0;
+                }
+            });
+
+            // ONLY drain vaults if deleting this business puts us in a deficit
+            if (totalDistributed > globalNetProfit) {
+                const deficitAmount = totalDistributed - globalNetProfit;
+
+                const newAllocations = (savingsData.allocations || []).map((rule: any) => {
+                    const deduction = deficitAmount * (Number(rule.percent) / 100);
+                    const newBalance = Math.max(0, (rule.balance || 0) - deduction);
+                    return { ...rule, balance: newBalance };
+                });
+
+                batch.update(rulesRef, { 
+                    allocations: newAllocations, 
+                    totalDistributed: globalNetProfit 
+                });
+            }
+        }
+
+        await batch.commit(); // This instantly triggers the Real-Time Listeners!
+        showToast("Portfolio permanently deleted", "success");
+        setDeletingBiz(null); 
+
     } catch(e) {
-        showToast("Failed to delete", "error");
+        console.error(e);
+        showToast("Failed to delete. Please try again.", "error");
     } finally {
         setIsDeleting(false);
     }
@@ -78,10 +120,11 @@ export default function Dashboard() {
       <DashboardHeader title="Financial Overview" />
       
       <div className="flex justify-end gap-3">
-         <Button variant="secondary" onClick={() => refresh()} disabled={isLoading}>
+         {/* We can hide the refresh button entirely now, or keep it as a placebo, since real-time makes it obsolete */}
+         <Button variant="secondary" onClick={() => {}} disabled={isLoading}>
             <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
          </Button>
-         <AddBusinessModal onSuccess={() => refresh()} /> 
+         <AddBusinessModal onSuccess={() => {}} /> 
       </div>
 
       {/* Stats Grid */}
@@ -140,7 +183,6 @@ export default function Dashboard() {
                                     <div className="fixed inset-0 z-10" onClick={() => setActiveMenu(null)}></div>
                                     <div className="absolute right-0 top-8 z-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl w-40 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                                         
-                                        {/* Edit Button */}
                                         <button 
                                             onClick={() => {
                                                 setEditingBiz(business);
@@ -152,7 +194,6 @@ export default function Dashboard() {
                                             <Pencil className="w-4 h-4" /> Edit Name
                                         </button>
 
-                                        {/* Delete Button */}
                                         <button 
                                             onClick={() => {
                                                 setDeletingBiz(business);
@@ -172,7 +213,7 @@ export default function Dashboard() {
                             <div className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
                                 <span className="text-xs font-semibold text-slate-500 uppercase">Net Profit</span>
                                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                                    {currencySymbol} {business.stats.netProfit.toLocaleString()}
+                                    {currencySymbol}{business.stats.netProfit.toLocaleString()}
                                 </span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 mt-2">
@@ -220,7 +261,7 @@ export default function Dashboard() {
                 </div>
                 <h3 className="text-lg font-bold dark:text-white mb-2">Delete Portfolio?</h3>
                 <p className="text-sm text-slate-500 mb-6">
-                    Are you sure you want to delete <strong>{deletingBiz.name}</strong>? This will permanently remove all associated transactions and data. This action cannot be undone.
+                    Are you sure you want to delete <strong>{deletingBiz.name}</strong>? This will permanently remove all associated transactions.
                 </p>
                 <div className="flex gap-3">
                     <Button variant="secondary" className="flex-1" onClick={() => setDeletingBiz(null)} disabled={isDeleting}>Cancel</Button>

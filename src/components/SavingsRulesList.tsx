@@ -1,6 +1,7 @@
+
 "use client";
 import { SavingsRule } from "@/src/types";
-import { Trash2, Plus, DollarSign, ArrowDownRight } from "lucide-react";
+import { Trash2, Plus, Banknote, ArrowDownRight } from "lucide-react"; 
 
 interface Props {
   rules: SavingsRule[];
@@ -55,8 +56,8 @@ export default function SavingsRulesList({ rules, onUpdate, onRemove, onAdd, onS
                   
                   <div className="flex-1 min-w-0">
                     <label className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Current Balance</label>
-                    <div className="flex items-center gap-1 text-lg font-bold text-emerald-600 dark:text-emerald-400 truncate">
-                      <DollarSign className="w-4 h-4" />
+                    <div className="flex items-center gap-1.5 text-lg font-bold text-emerald-600 dark:text-emerald-400 truncate">
+                      <Banknote className="w-5 h-5 opacity-80" />
                       {currentBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </div>
                   </div>

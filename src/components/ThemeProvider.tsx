@@ -3,8 +3,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Moon, Sun, Loader2 } from "lucide-react";
-import { useAuth } from "@/src/components/AuthProvider"; // Needed to check user
-import { db } from "@/src/lib/firebase"; // Needed for DB
+import { useAuth } from "@/src/components/AuthProvider"; 
+import { db } from "@/src/lib/firebase"; 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 type Theme = "light" | "dark";
@@ -20,7 +20,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Helper to apply theme to HTML tag
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
     if (newTheme === "dark") {
@@ -32,23 +31,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme", newTheme);
   };
 
-  // 1. Initial Load: Check LocalStorage OR Database
   useEffect(() => {
     const syncTheme = async () => {
-      // A. Try Local Storage First (Fastest)
       const localTheme = localStorage.getItem("theme") as Theme;
       if (localTheme) {
         applyTheme(localTheme);
       }
 
-      // B. If User is Logged In, Check Database
       if (user) {
         try {
           const docRef = doc(db, "users", user.uid, "settings", "general");
           const snap = await getDoc(docRef);
           if (snap.exists() && snap.data().theme) {
             const dbTheme = snap.data().theme as Theme;
-            // Only update if different to avoid flicker
             if (dbTheme !== localTheme) {
               applyTheme(dbTheme);
             }
@@ -63,7 +58,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     syncTheme();
   }, [user]);
 
-  // 2. Toggle Function
   const toggleTheme = async () => {
     const newTheme = theme === "light" ? "dark" : "light";
     
@@ -90,7 +84,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export const useTheme = () => useContext(ThemeContext);
 
-// The Toggle Button
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
   

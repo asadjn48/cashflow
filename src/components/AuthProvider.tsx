@@ -5,7 +5,6 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/src/lib/firebase";
 
 
-// 1. Update the Shape of the Context
 type AuthContextType = {
   user: User | null;
   loading: boolean;
@@ -31,7 +30,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  // 2. Pass 'loading' to the Provider
   return (
     <AuthContext.Provider value={{ user, loading }}>
       {children}

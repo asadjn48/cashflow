@@ -25,7 +25,6 @@ export default function SavingsDistribution({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       
-      {/* --- CHART SECTION --- */}
       <div className="bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-full flex flex-col">
         <h3 className="text-lg font-bold mb-4 px-4 pt-4 text-slate-800 dark:text-white">
             Vault Balances
@@ -56,7 +55,6 @@ export default function SavingsDistribution({
           </ResponsiveContainer>
         </div>
 
-        {/* Legend  */}
         <div className="flex flex-wrap gap-2 justify-center content-center mx-auto pb-4 px-2">
           {rules.map((item) => (
             <div 
@@ -72,7 +70,6 @@ export default function SavingsDistribution({
         </div>
       </div>
 
-      {/* --- DETAILED LIST SECTION --- */}
       <div className="flex flex-col gap-3">
         {rules.map((item) => (
           <div 
